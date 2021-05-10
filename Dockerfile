@@ -15,7 +15,7 @@ RUN helm version
 RUN curl -LO https://dl.k8s.io/release/v1.21.0/bin/linux/amd64/kubectl
 RUN chmod -R 555 kubectl
 RUN cp kubectl /usr/local/bin/
-RUN kubectl version
+RUN kubectl
 
 WORKDIR /source
 
@@ -37,7 +37,7 @@ COPY --from=build /usr/local/bin/helm /usr/local/bin/
 COPY --from=build /usr/local/bin/kubectl /usr/local/bin/
 
 RUN helm version
-RUN kubectl version
+RUN kubectl
 
 WORKDIR /app
 COPY --from=build /app .
