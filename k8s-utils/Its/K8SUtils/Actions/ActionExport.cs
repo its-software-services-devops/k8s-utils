@@ -1,13 +1,16 @@
 using Serilog;
 using Its.K8SUtils.Options;
-
+using Its.K8SUtils.Processors.Exporters;
 namespace Its.K8SUtils.Actions
 {
     public class ActionExport : BaseAction
     {
         protected override int RunAction(BaseOptions options)
         {
-            Log.Information("Action = [Export] Verbose = [{0}]", options.Verbosity); 
+            var exp = new ResourcesExporter();
+            exp.SetOptions(options);
+            exp.Do();
+
             return 0;
         }
     }

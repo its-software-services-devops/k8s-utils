@@ -5,7 +5,7 @@ namespace Its.K8SUtils.Processors.Exporters
 {
     public interface IExporter
     {
-        string Do(string cmd, string argv);
+        string Do();
         void SetExecutor(IExecutor exctr);
         void SetOptions(BaseOptions options);
     }

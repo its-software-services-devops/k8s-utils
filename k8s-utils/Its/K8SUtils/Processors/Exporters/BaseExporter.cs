@@ -8,7 +8,7 @@ namespace Its.K8SUtils.Processors.Exporters
         protected IExecutor executor = new Executor();
         protected BaseOptions options = null;
 
-        public abstract string Do(string cmd, string argv);
+        public abstract string Do();
 
         public void SetExecutor(IExecutor exctr)
         {

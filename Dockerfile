@@ -47,8 +47,4 @@ RUN dotnet k8s-utils.dll info
 RUN mkdir -p /wip/input
 RUN mkdir -p /wip/output
 
-ENV K8S_UTILS_SRC_DIR=/wip/input
-ENV K8S_UTILS_OUT_DIR=/wip/output
-ENV K8S_UTILS_TMP_DIR=/tmp
-
 ENTRYPOINT ["dotnet", "k8s-utils.dll"]

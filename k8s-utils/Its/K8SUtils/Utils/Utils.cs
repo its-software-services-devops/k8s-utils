@@ -1,10 +1,23 @@
 using Serilog;
+using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Its.K8SUtils.Utils
 {
     public static class Utils
     {
+        public static List<string> StringsToArray(string content)
+        {
+            var lines = new List<string>();
+
+            char[] delims = new[] { '\r', '\n' };
+            var linesRead = content.Split(delims, StringSplitOptions.RemoveEmptyEntries); 
+            lines.AddRange(linesRead);
+
+            return lines;           
+        }
+
         public static string Exec(string cmd, string argv)
         {
             string output = "";
