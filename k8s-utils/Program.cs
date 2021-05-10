@@ -1,12 +1,28 @@
 ﻿using System;
+using Serilog;
+using CommandLine;
+using System.Reflection;
+using Its.K8SUtils.Options;
+using Its.K8SUtils.Actions;
 
-namespace k8s_utils
+namespace Its.K8SUtils
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var log = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+            Log.Logger = log;
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var assemblyVersion = assembly.GetName().Version;
+            Log.Information("Running [k8s-utils] version [{0}]", assemblyVersion);
+
+            Parser.Default.ParseArguments<ExportOptions, InfoOptions>(args)
+                .WithParsed<ExportOptions>(UtilsAction.RunExportAction)
+                .WithParsed<InfoOptions>(UtilsAction.RunInfoAction);
         }
     }
 }
