@@ -1,9 +1,9 @@
 using Its.K8SUtils.Utils;
 using Its.K8SUtils.Options;
 
-namespace Its.K8SUtils.Processors.Exporters
+namespace Its.K8SUtils.Processors
 {
-    public interface IExporter
+    public interface IProcessor
     {
         string Do();
         void SetExecutor(IExecutor exctr);

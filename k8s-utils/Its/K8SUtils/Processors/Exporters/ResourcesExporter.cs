@@ -6,7 +6,7 @@ using Serilog;
 
 namespace Its.K8SUtils.Processors.Exporters
 {
-    public class ResourcesExporter : BaseExporter
+    public class ResourcesExporter : BaseProcessor
     {
         private readonly string cmdStr = "kubectl";
         private readonly string getResSubCmd = "api-resources -o name --namespaced={0}";

@@ -1,9 +1,9 @@
 using Its.K8SUtils.Utils;
 using Its.K8SUtils.Options;
 
-namespace Its.K8SUtils.Processors.Exporters
+namespace Its.K8SUtils.Processors
 {
-    public abstract class BaseExporter : IExporter
+    public abstract class BaseProcessor : IProcessor
     {
         protected IExecutor executor = new Executor();
         protected BaseOptions options = null;

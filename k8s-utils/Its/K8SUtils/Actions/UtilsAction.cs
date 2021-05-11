@@ -6,12 +6,14 @@ namespace Its.K8SUtils.Actions
     {
         Export,
         Info,
+        Compare,
     }
 
     public static class UtilsAction
     {
         private static IAction exportAction = new ActionExport();
         private static IAction infoAction = new ActionInfo();
+        private static IAction compareAction = new ActionCompare();
 
         public static void SetAction(ActionType type, IAction action)
         {
@@ -22,7 +24,11 @@ namespace Its.K8SUtils.Actions
             else if (type == ActionType.Info)
             {
                 infoAction = action;
-            }             
+            }
+            else if (type == ActionType.Compare)
+            {
+                compareAction = action;
+            }                          
         }
 
         public static void RunExportAction(BaseOptions o)
@@ -33,6 +39,11 @@ namespace Its.K8SUtils.Actions
         public static void RunInfoAction(BaseOptions o)
         {
             infoAction.Run(o);
-        }        
+        }
+
+        public static void RunCompareAction(BaseOptions o)
+        {
+            compareAction.Run(o);
+        }
     }
 }
