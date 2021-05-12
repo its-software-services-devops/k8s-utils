@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xml:lang>
+
+<head>
+	<title>Template testing</title>
+	<style>
+    td.error
+    {
+			color: rgb(248, 11, 11);
+    }
+    
+    tr.rowboundary {
+      border-top: 2px solid black;
+    }
+
+		#stat-table {
+			font-family: Arial, Helvetica, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		#stat-table td,
+		#stat-table th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		#stat-table tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#stat-table tr:hover {
+			background-color: #ddd;
+		}
+
+		#stat-table th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #868a86;
+			color: white;
+		}
+
+    /* Style tab links */
+    .tablink {
+      background-color: #555;
+      color: white;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-size: 17px;
+      width: 25%;
+    }
+
+    .tablink:hover {
+      background-color: #777;
+    }
+
+    /* Style the tab content (and add height:100% for full page content) */
+    .tabcontent {
+      /* color: white; */
+      /* display: none; */
+      padding: 100px 20px;
+      height: 100%;
+    }
+	</style>
+</head>
+
+<body>
+  <button class="tablink" onclick="openPage('GlobalSummary', this)" id="defaultOpen">Global Level Resource - Summary</button>
+  <button class="tablink" onclick="openPage('GlobalDetail', this)">Global Level Resource - Detail</button>
+  <button class="tablink" onclick="openPage('NsSummary', this)">NS Level Resource - Summary</button>
+  <button class="tablink" onclick="openPage('NsDetail', this)">NS Level Resource - Detail</button>
+
+  <div id="GlobalSummary" class="tabcontent">
+    <table id="stat-table" aria-describedby="Global resources summary">
+      <tr>
+        <th id="col1">KIND</th>
+        <th id="col2">OLD QUANTITY</th>
+        <th id="col3">NEW QUANTITY</th>
+        <th id="col4">STATUS</th>
+      </tr>
+      @foreach (var item in @Model.SummaryGlobalRes)
+      {
+        var classList = "";
+        @if (!@item.Status.Equals("EQUAL"))
+        {
+          classList = "error";
+        }
+      <tr>
+        <td class="@classList">@item.Kind</td>
+        <td class="@classList">@item.OldQuantity</td>
+        <td class="@classList">@item.NewQuantity</td>
+        <td class="@classList">@item.Status</td>
+      </tr>
+      }
+    </table>  
+  </div>
+
+  <div id="NsSummary" class="tabcontent">
+    <table id="stat-table" aria-describedby="Namespace resources summary">
+      <tr>
+        <th id="col0">NAMESPACE</th>
+        <th id="col1">KIND</th>
+        <th id="col2">OLD QUANTITY</th>
+        <th id="col3">NEW QUANTITY</th>
+        <th id="col4">STATUS</th>
+      </tr>
+      @{
+        var currNs = "";
+        var cnt = 0;
+        @foreach (var item in @Model.SummaryNsRes)
+        {
+          cnt++;
+          @if (@cnt == 1)
+          {
+            currNs = @item.NameSpace;            
+          }
+
+          var tdClassList = "";          
+          @if (!@item.Status.Equals("EQUAL"))
+          {
+            tdClassList = "error";
+          }
+
+          var trClassList = "";
+          @if (!@currNs.Equals(@item.NameSpace))
+          {
+            currNs = @item.NameSpace;
+            trClassList = "rowboundary";
+          }
+      <tr class="@trClassList">
+        <td class="@tdClassList">@item.NameSpace</td>
+        <td class="@tdClassList">@item.Kind</td>
+        <td class="@tdClassList">@item.OldQuantity</td>
+        <td class="@tdClassList">@item.NewQuantity</td>
+        <td class="@tdClassList">@item.Status</td>
+      </tr>
+      }
+    }
+    </table>  
+  </div>
+
+  <div id="GlobalDetail" class="tabcontent">
+    <table id="stat-table" aria-describedby="Global resources details">
+      <tr>
+        <th id="col1">KIND</th>
+        <th id="col2">RESOURCE NAME</th>
+        <th id="col3">STATUS</th>
+      </tr>
+      @{
+        var currKind = "";
+        var dtlGlbCnt = 0;
+        @foreach (var item in @Model.DetailGlobalRes)
+        {
+          dtlGlbCnt++;
+          @if (@dtlGlbCnt == 1)
+          {
+            currKind = @item.Kind;            
+          }
+
+          var tdClassList = "";          
+          @if (!@item.Status.Equals("BOTH"))
+          {
+            tdClassList = "error";
+          }
+
+          var trClassList = "";
+          @if (!@currKind.Equals(@item.Kind))
+          {
+            currKind = @item.Kind;
+            trClassList = "rowboundary";
+          }
+      <tr class="@trClassList">
+        <td class="@tdClassList">@item.Kind</td>
+        <td class="@tdClassList">@item.ResourceName</td>
+        <td class="@tdClassList">@item.Status</td>
+      </tr>
+      }
+    }
+    </table>  
+  </div>
+  
+  <div id="NsDetail" class="tabcontent">
+    <table id="stat-table" aria-describedby="Ns resources details">
+      <tr>
+        <th id="col0">NAMESPACE</th>
+        <th id="col1">KIND</th>
+        <th id="col2">RESOURCE NAME</th>
+        <th id="col4">STATUS</th>
+      </tr>
+      @{
+        var currNs2 = "";
+        var dtlNsCnt = 0;
+        @foreach (var item in @Model.DetailNsRes)
+        {
+          dtlNsCnt++;
+          @if (@dtlNsCnt == 1)
+          {
+            currNs2 = @item.NameSpace;            
+          }
+
+          var tdClassList = "";          
+          @if (!@item.Status.Equals("BOTH"))
+          {
+            tdClassList = "error";
+          }
+
+          var trClassList = "";
+          @if (!@currNs2.Equals(@item.NameSpace))
+          {
+            currNs2 = @item.NameSpace;
+            trClassList = "rowboundary";
+          }
+      <tr class="@trClassList">
+        <td class="@tdClassList">@item.NameSpace</td>
+        <td class="@tdClassList">@item.Kind</td>
+        <td class="@tdClassList">@item.ResourceName</td>
+        <td class="@tdClassList">@item.Status</td>
+      </tr>
+      }
+    }
+    </table>  
+  </div>
+
+  <script>
+    function openPage(pageName,elmnt) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablink");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].style.backgroundColor = "";
+      }
+      document.getElementById(pageName).style.display = "block";
+      elmnt.style.backgroundColor = "#B35F4D";
+    }
+    
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+  </script>  
+</body>
+
+</html>

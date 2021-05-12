@@ -2,12 +2,14 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using Its.K8SUtils.Options;
+using Its.K8SUtils.Templates;
+using Its.K8SUtils.Processors.Comparers.Models;
 using Serilog;
 
 namespace Its.K8SUtils.Processors.Comparers
 {
     class MapGrouping
-    {
+    {        
         public string FileName = "";
         public Dictionary<string, string> EntireFieldsMap = new Dictionary<string, string>();
 
@@ -29,7 +31,9 @@ namespace Its.K8SUtils.Processors.Comparers
     }
 
     public class ResourcesComparer : BaseProcessor
-    {
+    {        
+        private ITemplateEngine template = new RazorTemplateEngine();
+
         private readonly List<string> excludedList = new List<string>() { "Event", "ReplicaSet" };
 
         private List<string> allUnionRows = new List<string>();
@@ -53,58 +57,10 @@ namespace Its.K8SUtils.Processors.Comparers
             return "";
         }
 
-        private string FlagToString(bool oldFlag, bool newFlag)
+        public void SetTemplateEngine(ITemplateEngine engine)
         {
-            if (oldFlag && newFlag)
-            {
-                return "BOTH";
-            }
-            
-            if (oldFlag)
-            {
-                return "OLD";
-            }
-            
-            if (newFlag)
-            {
-                return "NEW";
-            }
-
-            return "ERROR";
+            template = engine;
         }
-
-        private string GetStatKey(string line)
-        {
-            char[] delims = new[] { ';' };
-            var fields = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
-
-            string recType = fields[0];
-
-            string key = String.Format("{0};{1}", recType, fields[1]);
-            if (recType.Equals("NS"))
-            {
-                key = String.Format("{0};{1};{2}", recType, fields[1], fields[2]);
-            }
-
-            return key;
-        }
-
-        private bool IsExcluded(string line)
-        {
-            char[] delims = new[] { ';' };
-            var fields = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
-
-            bool excluded = false;
-
-            string recType = fields[0];
-            if (recType.Equals("NS"))
-            {
-                string resName = fields[2];
-                excluded = excludedList.Contains(resName);
-            }
-
-            return excluded;
-        }        
 
         private List<string> AnalyzeRows()
         {
@@ -147,7 +103,7 @@ namespace Its.K8SUtils.Processors.Comparers
                     foundInNew = true;
                 } 
 
-                string flag = FlagToString(foundInOld, foundInNew);
+                string flag = Utils.FlagToString(foundInOld, foundInNew);
                 rows.Add(String.Format("01_{0};{1}", row, flag));
             }
 
@@ -158,10 +114,17 @@ namespace Its.K8SUtils.Processors.Comparers
 
         private void WriteFile(List<string> rows)
         {
-            var opt = options as CompareOptions;
+            string name = "k8s-compare-report";
 
-            File.WriteAllLines(opt.OutputFilePath, rows);
-            Log.Information("Wrote {0} lines to file [{1}]", rows.Count, opt.OutputFilePath);
+            var model = Utils.CreateReconcileModel(rows);
+
+            template.RegisterTemplateAssembly(name, "Its.K8SUtils.resources.k8s-compare-report.html");
+            string content = template.RenderTemplate<K8SReconcile>(name, model);
+
+            var opt = options as CompareOptions;
+            File.WriteAllText(opt.OutputFilePath, content);
+
+            Log.Information("Wrote HTML report to file [{0}]", opt.OutputFilePath);
         }
 
         private void PopulateRows()
@@ -187,7 +150,7 @@ namespace Its.K8SUtils.Processors.Comparers
                         continue;
                     }
 
-                    if (IsExcluded(line))
+                    if (Utils.IsExcluded(line, excludedList))
                     {
                         continue;
                     }
@@ -200,7 +163,7 @@ namespace Its.K8SUtils.Processors.Comparers
                     groupMap.EntireFieldsMap[line] = "dummy";
 
 
-                    string statKey = GetStatKey(line);
+                    string statKey = Utils.GetStatKey(line);
                     groupMap.IncreaseStatCount(statKey);
 
                     if (!dupGroup.StatFieldsMap.ContainsKey(statKey))
@@ -212,6 +175,6 @@ namespace Its.K8SUtils.Processors.Comparers
 
                 file.Close();  
             }
-        }        
+        }
     }
 }
