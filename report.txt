@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html xml:lang>
+    <head><title>Template testing</title></head>
+    <body>
+        <h1>This is template testing</h1>
+    </body>
+</html>
