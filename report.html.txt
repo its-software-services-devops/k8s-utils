@@ -2,7 +2,7 @@
 <html xml:lang>
 
 <head>
-	<title>K8S Reconcile Report</title>
+	<title>Template testing</title>
 	<style>
     td.error
     {
