@@ -23,7 +23,11 @@ namespace Its.K8SUtils.Templates
         public void RegisterTemplateAssembly(string templateName, string assemblyName)
         {
             string tplContent = "";
-
+var arr = assembly.GetManifestResourceNames();
+foreach (string s in arr)
+{
+    System.Console.WriteLine("DEBUG - [{0}]", s);
+}
             using (Stream stream = assembly.GetManifestResourceStream(assemblyName))
             using (StreamReader reader = new StreamReader(stream))
             {
