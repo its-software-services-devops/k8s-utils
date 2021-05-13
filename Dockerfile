@@ -23,11 +23,11 @@ WORKDIR /source
 COPY k8s-utils/* ./k8s-utils/
 COPY k8s-utils.sln .
 
-RUN ls -lrt
+RUN ls -lrt k8s-utils/*
 
 RUN dotnet restore k8s-utils/k8s-utils.csproj
 RUN dotnet publish k8s-utils/k8s-utils.csproj -c release -o /app --no-restore -p:PackageVersion=${version}
-RUN cp -r k8s-utils/resources /app
+COPY k8s-utils/resources/ /app
 
 RUN ls -lrt
 
