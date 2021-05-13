@@ -24,21 +24,24 @@ namespace Its.K8SUtils.Templates
         {
             string tplContent = "";
 
-var arr = assembly.GetManifestResourceNames();
-System.Console.WriteLine("DEBUG - Before listing resources");
-foreach (string s in arr)
-{
-    System.Console.WriteLine("DEBUG - [{0}]", s);
-}
-System.Console.WriteLine("DEBUG - After listing resources");
-
             using (Stream stream = assembly.GetManifestResourceStream(assemblyName))
             using (StreamReader reader = new StreamReader(stream))
             {
                 tplContent = reader.ReadToEnd();
             }
 
-            var template = razorEngine.Compile(tplContent);
+            RegisterTemplateString(templateName, tplContent);
+        }
+
+        public void RegisterTemplateFile(string templateName, string fname)
+        {
+            string tplContent = File.ReadAllText(fname);
+            RegisterTemplateString(templateName, tplContent);
+        }
+
+        public void RegisterTemplateString(string templateName, string content)
+        {
+            var template = razorEngine.Compile(content);
             templateCache.Add(templateName, template);
         }
 

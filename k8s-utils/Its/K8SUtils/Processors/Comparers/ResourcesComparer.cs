@@ -115,11 +115,9 @@ namespace Its.K8SUtils.Processors.Comparers
         private void WriteFile(List<string> rows)
         {
             string name = "k8s-compare-report";
-
             var model = Utils.CreateReconcileModel(rows);
 
-            //template.RegisterTemplateAssembly(name, "Its.K8SUtils.resources.k8s-compare-report.html");
-            template.RegisterTemplateAssembly(name, "Its.K8SUtils.Its.K8SUtils.Resources.k8s-compare-report.html");
+            template.RegisterTemplateFile(name, "resources/k8s-compare-report.html");
             
             string content = template.RenderTemplate<K8SReconcile>(name, model);
 
