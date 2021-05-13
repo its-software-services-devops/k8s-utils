@@ -27,9 +27,9 @@ RUN ls -lrt k8s-utils/*
 
 RUN dotnet restore k8s-utils/k8s-utils.csproj
 RUN dotnet publish k8s-utils/k8s-utils.csproj -c release -o /app --no-restore -p:PackageVersion=${version}
-COPY k8s-utils/resources/ /app
+COPY k8s-utils/resources/ /app/resources
 
-RUN ls -lrt /app
+RUN ls -lrt /app /app/resources
 
 ##### final stage/image
 FROM mcr.microsoft.com/dotnet/runtime:5.0
