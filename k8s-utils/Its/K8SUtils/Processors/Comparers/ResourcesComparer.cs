@@ -118,7 +118,9 @@ namespace Its.K8SUtils.Processors.Comparers
 
             var model = Utils.CreateReconcileModel(rows);
 
-            template.RegisterTemplateAssembly(name, "Its.K8SUtils.resources.k8s-compare-report.html");
+            //template.RegisterTemplateAssembly(name, "Its.K8SUtils.resources.k8s-compare-report.html");
+            template.RegisterTemplateAssembly(name, "Its.K8SUtils.Its.K8SUtils.Resources.k8s-compare-report.html");
+            
             string content = template.RenderTemplate<K8SReconcile>(name, model);
 
             var opt = options as CompareOptions;
