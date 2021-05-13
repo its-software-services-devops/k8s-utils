@@ -30,7 +30,18 @@ namespace Its.K8SUtils.Templates
                 tplContent = reader.ReadToEnd();
             }
 
-            var template = razorEngine.Compile(tplContent);
+            RegisterTemplateString(templateName, tplContent);
+        }
+
+        public void RegisterTemplateFile(string templateName, string fname)
+        {
+            string tplContent = File.ReadAllText(fname);
+            RegisterTemplateString(templateName, tplContent);
+        }
+
+        public void RegisterTemplateString(string templateName, string content)
+        {
+            var template = razorEngine.Compile(content);
             templateCache.Add(templateName, template);
         }
 
