@@ -14,6 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-      <EmbeddedResource Include="Its\K8SUtils\Resources\*.html" />
+      <EmbeddedResource Include="Its/K8SUtils/Resources/*.html" />
   </ItemGroup>  
 </Project>
