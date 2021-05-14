@@ -36,11 +36,11 @@ namespace Its.K8SUtils.Processors.Comparers
 
         private List<string> excludedList = new List<string>() { "Event", "ReplicaSet" };
 
-        private List<string> allUnionRows = new List<string>();
-        private List<string> allUnionStatKeys = new List<string>();
+        private readonly List<string> allUnionRows = new List<string>();
+        private readonly List<string> allUnionStatKeys = new List<string>();
 
-        private MapGrouping oldGroup = new MapGrouping();
-        private MapGrouping newGroup = new MapGrouping();
+        private readonly MapGrouping oldGroup = new MapGrouping();
+        private readonly MapGrouping newGroup = new MapGrouping();
     
         public override string Do()
         {
@@ -150,7 +150,7 @@ namespace Its.K8SUtils.Processors.Comparers
                 string line = "";                
                 while ((line = file.ReadLine()) != null) 
                 {
-                    if (line.Equals(""))
+                    if (string.IsNullOrEmpty(line))
                     {
                         continue;
                     }

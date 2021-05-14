@@ -7,6 +7,6 @@ namespace Its.K8SUtils.Processors
     {
         string Do();
         void SetExecutor(IExecutor exctr);
-        void SetOptions(BaseOptions options);
+        void SetOptions(BaseOptions opts);
     }
 }

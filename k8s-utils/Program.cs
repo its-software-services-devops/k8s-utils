@@ -7,7 +7,7 @@ using Its.K8SUtils.Actions;
 
 namespace Its.K8SUtils
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
