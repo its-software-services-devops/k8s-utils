@@ -34,7 +34,7 @@ namespace Its.K8SUtils.Processors.Comparers
     {        
         private ITemplateEngine template = new RazorTemplateEngine();
 
-        private readonly List<string> excludedList = new List<string>() { "Event", "ReplicaSet" };
+        private List<string> excludedList = new List<string>() { "Event", "ReplicaSet" };
 
         private List<string> allUnionRows = new List<string>();
         private List<string> allUnionStatKeys = new List<string>();
@@ -60,6 +60,11 @@ namespace Its.K8SUtils.Processors.Comparers
         public void SetTemplateEngine(ITemplateEngine engine)
         {
             template = engine;
+        }
+
+        public void SetExcludedList(List<string> execList)
+        {
+            excludedList = execList;
         }
 
         private List<string> AnalyzeRows()

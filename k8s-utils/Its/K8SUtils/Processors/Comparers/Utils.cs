@@ -102,7 +102,7 @@ namespace Its.K8SUtils.Processors.Comparers
                     item.ResourceName = fields[2];
                     item.Status = fields[3];
 
-                    model.DetailGlobalRes.Add(item);                       
+                    model.DetailGlobalRes.Add(item);                     
                 }
                 else if (recType.Equals("01_NS"))
                 {
