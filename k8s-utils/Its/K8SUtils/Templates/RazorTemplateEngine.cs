@@ -6,8 +6,8 @@ namespace Its.K8SUtils.Templates
 {
     public class RazorTemplateEngine : ITemplateEngine
     {
-        private IRazorEngine razorEngine = new RazorEngine();
-        private Dictionary<string, IRazorEngineCompiledTemplate> templateCache = new Dictionary<string, IRazorEngineCompiledTemplate>();
+        private readonly IRazorEngine razorEngine = new RazorEngine();
+        private readonly Dictionary<string, IRazorEngineCompiledTemplate> templateCache = new Dictionary<string, IRazorEngineCompiledTemplate>();
 
         public RazorTemplateEngine()
         {
