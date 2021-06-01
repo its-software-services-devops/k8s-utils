@@ -20,10 +20,11 @@ namespace Its.K8SUtils
             var assemblyVersion = assembly.GetName().Version;
             Log.Information("Running [k8s-utils] version [{0}]", assemblyVersion);
 
-            Parser.Default.ParseArguments<ExportOptions, CompareOptions, InfoOptions>(args)
+            Parser.Default.ParseArguments<ExportOptions, CompareOptions, InfoOptions, SnapshotOptions>(args)
                 .WithParsed<ExportOptions>(UtilsAction.RunExportAction)
                 .WithParsed<CompareOptions>(UtilsAction.RunCompareAction)
-                .WithParsed<InfoOptions>(UtilsAction.RunInfoAction);
+                .WithParsed<InfoOptions>(UtilsAction.RunInfoAction)
+                .WithParsed<SnapshotOptions>(UtilsAction.RunSnapshotAction);
         }
     }
 }
