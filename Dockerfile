@@ -17,6 +17,10 @@ RUN chmod -R 555 kubectl
 RUN cp kubectl /usr/local/bin/
 RUN kubectl
 
+RUN curl -LO https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64.tar.gz
+RUN tar xz yq_linux_amd64.tar.gz && mv yq_linux_amd64 /usr/local/bin/yq
+RUN yq
+
 WORKDIR /source
 
 # copy csproj and restore as distinct layers
@@ -38,6 +42,7 @@ RUN apt-get -y install curl
 
 COPY --from=build /usr/local/bin/helm /usr/local/bin/
 COPY --from=build /usr/local/bin/kubectl /usr/local/bin/
+COPY --from=build /usr/local/bin/yq /usr/local/bin/
 
 RUN helm version
 RUN kubectl

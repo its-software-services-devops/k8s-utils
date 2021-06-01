@@ -12,18 +12,16 @@ namespace Its.K8SUtils.Processors.Snapshoters
 
         private readonly string cmdStr = "kubectl";
         private readonly string getResSubCmd = "api-resources -o name --namespaced={0}";
-        private readonly string getKindNsSubCmd = "get {0} --all-namespaces {1} --sort-by=.metadata.namespace";
-        private readonly string getKindNsSubCmdPath = "-o=yaml";
-        private readonly string getKindGbSubCmd = "get {0} {1}";
-        private readonly string getKindGbSubCmdPath = "-o=yaml";
+        private readonly string getKindNsSubCmd = "get {0} --all-namespaces --sort-by=.metadata.namespace -o yaml";
+        private readonly string getKindGbSubCmd = "get {0} -o yaml";
 
         public override string Do()
         {
             var nsLevelRes = GetAvailableResources("true");
             var gbLevelRes = GetAvailableResources("false");
 
-            var nsLvlRes = GetResources(nsLevelRes, getKindNsSubCmd, getKindNsSubCmdPath);
-            var glbLvlRes = GetResources(gbLevelRes, getKindGbSubCmd, getKindGbSubCmdPath);
+            var nsLvlRes = GetResources(nsLevelRes, getKindNsSubCmd);
+            var glbLvlRes = GetResources(gbLevelRes, getKindGbSubCmd);
 
             WriteFile(glbLvlRes, nsLvlRes);
             
@@ -34,8 +32,8 @@ namespace Its.K8SUtils.Processors.Snapshoters
         {
             var opt = options as SnapshotOptions;
 
-            string gbLevelName = String.Format("{0}/global.yaml", opt.ExportOutputDir);
-            string nsLevelName = String.Format("{0}/ns.yaml", opt.ExportOutputDir);
+            string gbLevelName = String.Format("{0}_global.yaml", tmpFile);
+            string nsLevelName = String.Format("{0}_ns.yaml", tmpFile);
 
             using StreamWriter gbFile = new(gbLevelName);
             gbFile.WriteLine(glbRes);
@@ -46,10 +44,10 @@ namespace Its.K8SUtils.Processors.Snapshoters
             Log.Information("Wrote file [{0}] and [{1}]", gbLevelName, nsLevelName);
         }
 
-        private string GetResources(List<string> kinds, string subCmd, string jsonPath)
+        private string GetResources(List<string> kinds, string subCmd)
         {
             string allKinds = String.Join(",", kinds.ToArray());
-            string argv = String.Format(subCmd, allKinds, jsonPath);
+            string argv = String.Format(subCmd, allKinds);
 
             string result = executor.Run(cmdStr, argv);
 
