@@ -31,11 +31,11 @@ namespace Its.K8SUtils.Processors.Snapshoters
         }
 
         private void WriteFile(string glbRes, string nsRes)
-        {   
-            string gbLevelName = String.Format("{0}_global.yaml", tmpFile);
-            string nsLevelName = String.Format("{0}_ns.yaml", tmpFile);
+        {
+            var opt = options as SnapshotOptions;
 
-            //var opt = options as SnapshotOptions;
+            string gbLevelName = String.Format("{0}/global.yaml", opt.ExportOutputDir);
+            string nsLevelName = String.Format("{0}/ns.yaml", opt.ExportOutputDir);
 
             using StreamWriter gbFile = new(gbLevelName);
             gbFile.WriteLine(glbRes);

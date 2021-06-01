@@ -1,0 +1,2 @@
+get api-resources -o name --namespaced=false -o=yaml
+
