@@ -27,8 +27,8 @@ namespace Its.K8SUtils.Processors.Snapshoters
 
         private readonly string cmdStr = "kubectl";
         private readonly string getResSubCmd = "api-resources -o name --namespaced={0}";
-        private readonly string getKindNsSubCmd = "get {0} --all-namespaces --sort-by=.metadata.namespace -o yaml";
-        private readonly string getKindGbSubCmd = "get {0} -o yaml";
+        private readonly string getKindNsSubCmd = "get {0} --all-namespaces --sort-by=.metadata.name -o yaml";
+        private readonly string getKindGbSubCmd = "get {0} --sort-by=.metadata.name -o yaml";
 
         public override string Do()
         {
