@@ -17,13 +17,12 @@ namespace Its.K8SUtils.Processors.Snapshoters
             ".items.[].metadata.selfLink",
             ".items.[].metadata.resourceVersion",
             ".items.[].metadata.uid",
-            ".items.[].metadata.annotations.\"kubectl.kubernetes.io/last-applied-configuration\"",
         };
 
         private readonly string tmpFile = Path.GetTempFileName();
 
         private readonly string filterCmd = "yq";
-        private readonly string filterArgv = "e 'del({0})' {1}";
+        private readonly string filterArgv = "e \"del({0})\" {1}";
 
         private readonly string cmdStr = "kubectl";
         private readonly string getResSubCmd = "api-resources -o name --namespaced={0}";
