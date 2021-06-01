@@ -14,7 +14,7 @@ namespace Its.K8SUtils.Processors.Snapshoters
         private readonly string getResSubCmd = "api-resources -o name --namespaced={0}";
         private readonly string getKindNsSubCmd = "get {0} --all-namespaces {1} --sort-by=.metadata.namespace";
         private readonly string getKindNsSubCmdPath = "-o=yaml";
-        private readonly string getKindGbSubCmd = "get {0} {1} --sort-by=.metadata.namespace";
+        private readonly string getKindGbSubCmd = "get {0} {1}";
         private readonly string getKindGbSubCmdPath = "-o=yaml";
 
         public override string Do()
