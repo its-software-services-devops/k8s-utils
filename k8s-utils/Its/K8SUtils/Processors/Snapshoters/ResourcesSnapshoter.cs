@@ -9,7 +9,7 @@ namespace Its.K8SUtils.Processors.Snapshoters
     public class ResourcesSnapshoter : BaseProcessor
     {
         private List<string> excludedList = new List<string>() 
-        { 
+        {
             ".items.[].metadata.managedFields", 
             ".items.[].status",
             ".items.[].metadata.creationTimestamp",
@@ -17,6 +17,7 @@ namespace Its.K8SUtils.Processors.Snapshoters
             ".items.[].metadata.selfLink",
             ".items.[].metadata.resourceVersion",
             ".items.[].metadata.uid",
+            ".items.[].metadata.annotations.\\\"kubectl.kubernetes.io/last-applied-configuration\\\"",
         };
 
         private readonly string tmpFile = Path.GetTempFileName();
