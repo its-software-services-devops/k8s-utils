@@ -20,7 +20,7 @@ namespace Its.K8SUtils.Processors.Snapshoters
             ".items.[].metadata.creationTimestamp",
             ".items.[].metadata.generation",
             ".items.[].metadata.selfLink",
-            //".items.[].metadata.resourceVersion",
+            ".items.[].metadata.resourceVersion",
             ".items.[].metadata.uid",
             ".items.[].metadata.annotations.\\\"kubectl.kubernetes.io/last-applied-configuration\\\"",
         };
