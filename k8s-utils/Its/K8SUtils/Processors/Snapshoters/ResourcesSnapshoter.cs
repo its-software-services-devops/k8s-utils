@@ -20,7 +20,7 @@ namespace Its.K8SUtils.Processors.Snapshoters
             ".items.[].metadata.creationTimestamp",
             ".items.[].metadata.generation",
             ".items.[].metadata.selfLink",
-            ".items.[].metadata.resourceVersion",
+            //".items.[].metadata.resourceVersion",
             ".items.[].metadata.uid",
             ".items.[].metadata.annotations.\\\"kubectl.kubernetes.io/last-applied-configuration\\\"",
         };
@@ -66,13 +66,13 @@ namespace Its.K8SUtils.Processors.Snapshoters
             string glbFilterCtn = GetFilteredContent(gbLevelName);
             string nsFilterCtn = GetFilteredContent(nsLevelName);
 
-            SaveResources(glbFilterCtn, "gb");
-            SaveResources(nsFilterCtn, "ns");
+            int glbCnt = SaveResources(glbFilterCtn, "gb");
+            int nsCnt = SaveResources(nsFilterCtn, "ns");
 
-            Log.Information("Wrote file [{0}] and [{1}]", gbFilterName, nsFilterName);
+            Log.Information("Wrote [{0}] resources for global level, and [{1}] resources for namespace level", glbCnt, nsCnt);
         }
 
-        private void SaveResources(string content, string mode)
+        private int SaveResources(string content, string mode)
         {
             var arr = Utils.Utils.StringsToArray(content);
 
@@ -112,6 +112,8 @@ namespace Its.K8SUtils.Processors.Snapshoters
             {
                 SaveResource(lines, mode);
             }
+
+            return arr.Count;
         }
 
         private void SaveResource(List<string> lines, string mode)
