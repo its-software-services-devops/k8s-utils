@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Its.K8SUtils.Options;
@@ -68,8 +69,14 @@ namespace Its.K8SUtils.Processors.Snapshoters
 
             int glbCnt = SaveResources(glbFilterCtn, "gb");
             int nsCnt = SaveResources(nsFilterCtn, "ns");
-
+            
             Log.Information("Wrote [{0}] resources for global level, and [{1}] resources for namespace level", glbCnt, nsCnt);
+
+            string startDir = String.Format("{0}/{1}", tmpDir, timeStamp);
+            string zipPath = String.Format("{0}/k8s-snapshot-{1}.zip", opt.ExportOutputDir, DateTime.Now.ToString("yyyyMMddHHmmssffff"));
+            ZipFile.CreateFromDirectory(startDir, zipPath);
+
+            Log.Information("Compressed files and saved to [{0}]", zipPath);
         }
 
         private int SaveResources(string content, string mode)
