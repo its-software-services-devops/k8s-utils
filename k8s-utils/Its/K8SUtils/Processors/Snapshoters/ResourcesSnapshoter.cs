@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Its.K8SUtils.Options;
 using Serilog;
@@ -8,6 +9,10 @@ namespace Its.K8SUtils.Processors.Snapshoters
 {
     public class ResourcesSnapshoter : BaseProcessor
     {
+        private readonly Regex nameRegex = new Regex(@"^  name:\s+(.+)$");
+        private readonly Regex kindRegex = new Regex(@"^kind:\s+(.+)$");
+        private readonly Regex nsRegex = new Regex(@"^  namespace:\s+(.+)$");
+
         private List<string> excludedList = new List<string>() 
         {
             ".items.[].metadata.managedFields", 
@@ -21,6 +26,8 @@ namespace Its.K8SUtils.Processors.Snapshoters
         };
 
         private readonly string tmpFile = Path.GetTempFileName();
+        private readonly string tmpDir = Path.GetTempPath();
+        private readonly string timeStamp = DateTime.Now.ToString("yyyyMMddHHmmssffff");
 
         private readonly string filterCmd = "yq";
         private readonly string filterArgv = "e \"del({0})\" {1}";
@@ -59,10 +66,99 @@ namespace Its.K8SUtils.Processors.Snapshoters
             string glbFilterCtn = GetFilteredContent(gbLevelName);
             string nsFilterCtn = GetFilteredContent(nsLevelName);
 
-            File.WriteAllText(gbFilterName, glbFilterCtn);
-            File.WriteAllText(nsFilterName, nsFilterCtn);
+            SaveResources(glbFilterCtn, "gb");
+            SaveResources(nsFilterCtn, "ns");
 
             Log.Information("Wrote file [{0}] and [{1}]", gbFilterName, nsFilterName);
+        }
+
+        private void SaveResources(string content, string mode)
+        {
+            var arr = Utils.Utils.StringsToArray(content);
+
+            bool inArray = false;
+            var lines = new List<string>();
+
+            foreach (string line in arr)
+            {
+                string recType = line.Substring(0, 4);
+                string keepLine = line.Substring(4);
+
+                if (recType.Equals("  - "))
+                {
+                    if (inArray)
+                    {
+                        SaveResource(lines, mode);
+                        lines.Clear();
+                    }
+
+                    lines.Add(keepLine);
+                    inArray = true;
+                }
+                else if (inArray && recType.Equals("    "))
+                {
+                    lines.Add(keepLine);
+                }
+                else if (inArray)
+                {
+                    inArray = false;
+                    
+                    SaveResource(lines, mode);
+                    lines.Clear();                    
+                }
+            }
+
+            if (lines.Count > 0)
+            {
+                SaveResource(lines, mode);
+            }
+        }
+
+        private void SaveResource(List<string> lines, string mode)
+        {
+            string name = "";
+            string nameSpace = "";
+            string kind = "";
+
+            foreach (string line in lines)
+            {     
+                if (nameRegex.IsMatch(line))
+                {
+                    var match = nameRegex.Match(line);
+                    name = match.Groups[1].Value;                    
+                }
+                else if (nsRegex.IsMatch(line))
+                {
+                    var match = nsRegex.Match(line);
+                    nameSpace = match.Groups[1].Value;                
+                }
+                else if (kindRegex.IsMatch(line))
+                {
+                    var match = kindRegex.Match(line);
+                    kind = match.Groups[1].Value;                      
+                }
+            }
+
+            SaveResourceToFile(name, kind, nameSpace, lines, mode, timeStamp);
+        }
+
+        private void SaveResourceToFile(string name, string kind, string ns, List<string> lines, string mode, string ts)
+        {
+            string dirName = String.Format("{0}/{1}/{2}/{3}", tmpDir, ts, ns, kind);
+            if (mode.Equals("gb"))
+            {
+                dirName = String.Format("{0}/{1}/{2}/{3}", tmpDir, ts, "__global__", kind);
+            }
+
+            if (!Directory.Exists(dirName))
+            {
+                Directory.CreateDirectory(dirName);
+            }
+
+            string pathName = String.Format("{0}/{1}.yaml", dirName, name.Replace(':', '#'));
+            File.WriteAllLines(pathName, lines);
+
+            Log.Information("Saved resource to file [{0}]", pathName);
         }
 
         private string GetResources(List<string> kinds, string subCmd)
