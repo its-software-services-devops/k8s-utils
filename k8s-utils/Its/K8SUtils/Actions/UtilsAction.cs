@@ -7,6 +7,7 @@ namespace Its.K8SUtils.Actions
         Export,
         Info,
         Compare,
+        Snapshot,
     }
 
     public static class UtilsAction
@@ -14,6 +15,7 @@ namespace Its.K8SUtils.Actions
         private static IAction exportAction = new ActionExport();
         private static IAction infoAction = new ActionInfo();
         private static IAction compareAction = new ActionCompare();
+        private static IAction snapshotAction = new ActionSnapshot();
 
         public static void SetAction(ActionType type, IAction action)
         {
@@ -28,7 +30,11 @@ namespace Its.K8SUtils.Actions
             else if (type == ActionType.Compare)
             {
                 compareAction = action;
-            }                          
+            }
+            else if (type == ActionType.Snapshot)
+            {
+                snapshotAction = action;
+            }                                     
         }
 
         public static void RunExportAction(BaseOptions o)
@@ -45,5 +51,10 @@ namespace Its.K8SUtils.Actions
         {
             compareAction.Run(o);
         }
+
+        public static void RunSnapshotAction(BaseOptions o)
+        {
+            snapshotAction.Run(o);
+        }        
     }
 }

@@ -1,0 +1,2 @@
+get api-resources -o name --namespaced=true --all-namespaces -o=yaml --sort-by=.metadata.namespace
+
