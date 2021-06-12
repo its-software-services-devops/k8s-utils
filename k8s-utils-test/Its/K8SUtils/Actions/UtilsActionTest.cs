@@ -52,6 +52,15 @@ namespace Its.K8SUtils.Actions
             int valueReturned = RunAction(ActionType.Info, UtilsAction.RunInfoAction, valueNeed);
 
             Assert.AreEqual(valueNeed, valueReturned, "Last run status not match!!!");
-        }                       
+        }
+
+        [Test]
+        public void RunSnapshotActionTest()
+        {
+            int valueNeed = 9999;
+            int valueReturned = RunAction(ActionType.Snapshot, UtilsAction.RunSnapshotAction, valueNeed);
+
+            Assert.AreEqual(valueNeed, valueReturned, "Last run status not match!!!");
+        }                      
     }
 }

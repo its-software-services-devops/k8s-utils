@@ -14,6 +14,8 @@ namespace Its.K8SUtils.Processors.Snapshoters
         private readonly Regex kindRegex = new Regex(@"^kind:\s+(.+)$");
         private readonly Regex nsRegex = new Regex(@"^  namespace:\s+(.+)$");
 
+        private string currentSnapshotFile = "";
+
         private List<string> excludedList = new List<string>() 
         {
             ".items.[].metadata.managedFields", 
@@ -51,6 +53,11 @@ namespace Its.K8SUtils.Processors.Snapshoters
             return "";
         }
 
+        public string GetSnapshotPath()
+        {
+            return currentSnapshotFile;
+        }
+
         private void WriteFile(string glbRes, string nsRes)
         {
             var opt = options as SnapshotOptions;
@@ -77,6 +84,7 @@ namespace Its.K8SUtils.Processors.Snapshoters
             ZipFile.CreateFromDirectory(startDir, zipPath);
 
             Log.Information("Compressed files and saved to [{0}]", zipPath);
+            currentSnapshotFile = zipPath;
         }
 
         private int SaveResources(string content, string mode)
@@ -113,11 +121,6 @@ namespace Its.K8SUtils.Processors.Snapshoters
                     SaveResource(lines, mode);
                     lines.Clear();                    
                 }
-            }
-
-            if (lines.Count > 0)
-            {
-                SaveResource(lines, mode);
             }
 
             return arr.Count;
