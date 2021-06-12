@@ -67,7 +67,7 @@ metadata:
 
             snptr.Do();
 
-            snptr.GetSnapshotPath();
+            Assert.AreEqual(true, File.Exists(snptr.GetSnapshotPath()));
         }           
     }
 }
