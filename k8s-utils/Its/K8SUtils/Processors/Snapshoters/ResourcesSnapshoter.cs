@@ -16,7 +16,7 @@ namespace Its.K8SUtils.Processors.Snapshoters
 
         private string currentSnapshotFile = "";
 
-        private List<string> excludedList = new List<string>() 
+        private readonly List<string> excludedList = new List<string>() 
         {
             ".items.[].metadata.managedFields", 
             ".items.[].status",
@@ -28,7 +28,7 @@ namespace Its.K8SUtils.Processors.Snapshoters
             ".items.[].metadata.annotations.\\\"kubectl.kubernetes.io/last-applied-configuration\\\"",
         };
 
-        private readonly string tmpFile = Path.GetTempFileName();
+        private readonly string tmpFile = Path.GetRandomFileName();
         private readonly string tmpDir = Path.GetTempPath();
         private readonly string timeStamp = DateTime.Now.ToString("yyyyMMddHHmmssffff");
 
@@ -64,9 +64,6 @@ namespace Its.K8SUtils.Processors.Snapshoters
 
             string gbLevelName = String.Format("{0}_global.yaml", tmpFile);
             string nsLevelName = String.Format("{0}_ns.yaml", tmpFile);
-
-            string gbFilterName = String.Format("{0}/global_resources.yaml", opt.ExportOutputDir);
-            string nsFilterName = String.Format("{0}/ns_resources.yaml", opt.ExportOutputDir);
 
             File.WriteAllText(gbLevelName, glbRes);
             File.WriteAllText(nsLevelName, nsRes);
